@@ -1252,7 +1252,7 @@ def raspberry_command(add=False):
                     capture=True
                 )
                 # delete the code sent
-                # ssh_controller.remove(file_name)
+                ssh_controller.remove(file_name)
                 # send the return value
                 re = "raspberrypi_code.raspberrypi.package.python.glt.org.py return "
                 if output[-1].find(re) != -1:
@@ -1427,3 +1427,24 @@ class raspberrypi:
                     continue
         res = raspberrypi_ip
         return res
+
+
+def run_command(command=None,display=False):
+    if not command == None:
+        global raspberrypi_prep
+        HOST_IP = raspberrypi().local(raspberrypi_prep)
+        ssh_controller = ssh.SSHController(
+            host=HOST_IP,
+            user="geoloup",
+        ssh_password=SSH_PWD
+        )
+        ssh_controller.connect()
+        exit_code, output = ssh_controller.run(
+            command=command,
+            display=display,
+            capture=True
+        )
+        return output[-1]
+    else:
+        quit("You need to have a command... At run_command")
+        return None
