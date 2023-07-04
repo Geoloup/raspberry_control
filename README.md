@@ -6,7 +6,7 @@
  3. The function can be run on the Raspberry Pi  by calling `@raspberry.raspberry_command()` and get the result
  4. Get Output of a function that was run on the raspberry
  5. Real-time output
- 6. Run command on the Raspberry Pi with `raspberry.fun_command("command here")`
+ 6. Run command on the Raspberry Pi with `raspberry.run_command("command here")`
  7. You can do `@raspberrypi.timeout(time,default)` that will make the function stop after the time specified and stop if it's not finish
 ## Example
 
