@@ -48,6 +48,6 @@
     print(other()) # you can get the output after
 
 ## How to install the package
-Do `Pip install raspberry-control`
+Do `pip install raspberry-control`
 Supported for python 3.10 and higher*
 *note not tested for lower version
