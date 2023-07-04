@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "raspberrypi_control"
+version = "0.0.1"
+authors = [
+  { name="Geoloup Team", email="franckiebbb@gmail.com"},
+]
+description = "Control Raspberrypi board with ssh and python"
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/Geoloup/raspberry_control/"
+"Bug Tracker" = "https://github.com/Geoloup/raspberry_control/issues"
