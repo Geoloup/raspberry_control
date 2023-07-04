@@ -1154,6 +1154,7 @@ raspberrypi_prep = "192.168.0.10"
 raspberrypi_prep_max = "9"
 raspberrypi_prep_timeout = 1
 raspberrypi_ip = 0
+raspberrypi_info = list()
 
 
 def raspberry_command(add=False):
@@ -1427,16 +1428,23 @@ class raspberrypi:
                     continue
         res = raspberrypi_ip
         return res
-
+    
+    def set_raspberry_info(self,user_name,password):
+        global raspberrypi_info
+        raspberrypi_info = list()
+        raspberrypi_info.append(user_name)
+        raspberrypi_info.append(password)
 
 def run_command(command=None,display=False):
     if not command == None:
         global raspberrypi_prep
+        global raspberrypi_info
+        SSH_PWD = "geoloup"
         HOST_IP = raspberrypi().local(raspberrypi_prep)
         ssh_controller = ssh.SSHController(
             host=HOST_IP,
-            user="geoloup",
-        ssh_password=SSH_PWD
+            user=raspberrypi_info[0],
+            ssh_password=raspberrypi_info[1]
         )
         try:
             ssh_controller.connect()
