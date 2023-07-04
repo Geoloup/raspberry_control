@@ -1,4 +1,4 @@
-import raspberrypi  # import package for raspberrypi controlling over ssh
+import raspberrypi_control  # import package for raspberrypi controlling over ssh
 import os  # Put import here they are take and install to the raspberrypi file.
 import time
 

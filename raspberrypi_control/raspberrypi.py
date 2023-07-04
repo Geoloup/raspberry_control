@@ -1446,7 +1446,7 @@ def run_command(command=None,display=False):
                 capture=True
             )
             return output[-1]
-        else:
+        except:
             import os
             return  os.system(command)
     else:
