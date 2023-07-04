@@ -10,11 +10,11 @@
  7. You can do `@raspberrypi.timeout(time,default)` that will make the function stop after the time specified and stop if it's not finish
 ## Example
 
-    import raspberrypi # import package for raspberrypi controlling over ssh  
+    import raspberrypi_control # import package for raspberrypi controlling over ssh  
     import os # Put import here they are take and install to the raspberrypi file.  
     import time  
       
-    rp = raspberrypi # rp is for RaspBerryPi  
+    rp = raspberrypi_control # rp is for RaspBerryPi  
       
     i = 1234567890  
       
