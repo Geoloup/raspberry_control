@@ -10,6 +10,10 @@ authors = [
 ]
 description = "Control Raspberrypi board with ssh and python"
 readme = "README.md"
+dependencies = [
+    "requests",
+    "paramiko",
+]
 requires-python = ">=3.10"
 classifiers = [
     "Programming Language :: Python :: 3",
