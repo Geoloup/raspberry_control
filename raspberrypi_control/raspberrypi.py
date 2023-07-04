@@ -1438,13 +1438,17 @@ def run_command(command=None,display=False):
             user="geoloup",
         ssh_password=SSH_PWD
         )
-        ssh_controller.connect()
-        exit_code, output = ssh_controller.run(
-            command=command,
-            display=display,
-            capture=True
-        )
-        return output[-1]
+        try:
+            ssh_controller.connect()
+            exit_code, output = ssh_controller.run(
+                command=command,
+                display=display,
+                capture=True
+            )
+            return output[-1]
+        else:
+            import os
+            return  os.system(command)
     else:
         quit("You need to have a command... At run_command")
         return None
