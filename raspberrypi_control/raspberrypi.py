@@ -1163,14 +1163,15 @@ def raspberry_command(add=False):
         def wrapper(*args, **kwargs):
             try:
                 global raspberrypi_prep
+                global raspberrypi_info
                 global imported
                 global function_to_add
                 HOST_IP = raspberrypi().local(raspberrypi_prep)
-                SSH_PWD = "geoloup"
+                SSH_PWD = raspberrypi_info[0]
                 ssh_controller = ssh.SSHController(
                     host=HOST_IP,
                     user="geoloup",
-                    ssh_password=SSH_PWD
+                    ssh_password=raspberrypi_info[1]
                 )
                 ssh_controller.connect()
                 import inspect
@@ -1383,12 +1384,13 @@ class raspberrypi:
 
     @timeout(raspberrypi_prep_timeout, default=False)
     def check(self, hoip):
+        global raspberrypi_info
         HOST_IP = hoip
-        SSH_PWD = "geoloup"
+        SSH_PWD = raspberrypi_info[1]
 
         ssh_controller = ssh.SSHController(
             host=HOST_IP,
-            user="geoloup",
+            user=raspberrypi_info[0],
             ssh_password=SSH_PWD
         )
         ssh_controller.connect()
