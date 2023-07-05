@@ -53,3 +53,6 @@
 Do `pip install raspberry-control`
 Supported for python 3.10 and higher*
 *note not tested for lower version
+
+## Bug report
+[Github - Issues](https://github.com/Geoloup/raspberry_control/issues/new?assignees=franck403&labels=bug&projects=&template=bug-report.yml&title=%5BBUG%5D+Untitled+Bug+Report)
