@@ -1460,7 +1460,7 @@ def run_command(command=None,display=False):
             )
             ssh_controller.disconnect()
             return output[-1]
-        except:
+        except Exception:
             import os
             return  os.system(command)
     else:
