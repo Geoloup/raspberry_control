@@ -22,7 +22,7 @@ body:
       label: Code to reproduce the Bug
       description: Put you're code with removed password and private.
       placeholder: Code here
-      value: bug description
+      value: Code to recreate the bug
     validations:
       required: False
   - type: input
