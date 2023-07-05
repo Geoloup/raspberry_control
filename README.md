@@ -45,6 +45,7 @@
         rp.raspberrypi().set_preparation("192.168.0.10", 8, 1) # config locator for the raspberrypi  
         rp.raspberrypi().local("192.168.0.10") # set the start ip set in the line in the top  
         rp.config("main") # file name if this file (no .py)  
+        rp.run_command("Hello World",True) # true is for if console ouput is print or no
         print(test())  
         print(other()) # you can get the output after
 
