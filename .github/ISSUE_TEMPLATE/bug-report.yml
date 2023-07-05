@@ -1,0 +1,35 @@
+name: Bug Report
+description: Submit a Bug Report
+title: '[BUG] Untitled Bug Report'
+labels: 'bug'
+assignees: 
+  - franck403
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for taking the time to fill out a bug report!
+  - type: textarea
+    attributes:
+      label: Bug Description
+      description: Tell us more about the bug.
+      placeholder: Write a description of the bug
+      value: bug description
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Code to reproduce the Bug
+      description: Put you're code with removed password and private.
+      placeholder: Code here
+      value: bug description
+    validations:
+      required: False
+  - type: input
+    attributes:
+      label: Resource URL
+      description: If possible, add a Google Drive (or related service) link to help us reproduce the bug.Please note its need to be public.
+      placeholder: https://drive.google.com/file/d/1BlWEGA_j8XVgRCIB65mcRk4rnYdFyspO/view?usp=sharing
+      value: resource url
+    validations:
+      required: false
