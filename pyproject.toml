@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "raspberrypi_control"
-version = "2.0.3"
+version = "2.0.4"
 authors = [
   { name="Geoloup Team", email="franckiebbb@gmail.com"},
 ]
