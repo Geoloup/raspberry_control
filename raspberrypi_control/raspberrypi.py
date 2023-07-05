@@ -1166,11 +1166,9 @@ def raspberry_command(add=False):
                 global raspberrypi_info
                 global imported
                 global function_to_add
-                HOST_IP = raspberrypi().local(raspberrypi_prep)
-                SSH_PWD = raspberrypi_info[0]
                 ssh_controller = ssh.SSHController(
-                    host=HOST_IP,
-                    user="geoloup",
+                    host=raspberrypi().local(raspberrypi_prep),
+                    user=raspberrypi_info[0],
                     ssh_password=raspberrypi_info[1]
                 )
                 ssh_controller.connect()
@@ -1261,8 +1259,9 @@ def raspberry_command(add=False):
                     return output[-1].replace(re, "")
                 else:
                     return None
+                ssh_controller.disconnect()
             except Exception as f:  # if raspberrypi not find it's will be run in local on the computer
-                print("raspberrypi was not find or a erro have appedned. The error is : " + str(f))
+                print("raspberrypi was not find or a error have appened. The error is : " + str(f))
                 return func(*args, **kwargs)
 
         return wrapper
@@ -1413,7 +1412,8 @@ class raspberrypi:
     def local(self, start_ip):
         global raspberrypi_ip
         global raspberrypi_prep_max
-        if raspberrypi_ip == 0:
+        global raspberrypi_prep
+        if raspberrypi_ip == 0 and raspberrypi_prep == start_ip:
             gh = 0
             gj = []
             while True:
@@ -1429,8 +1429,11 @@ class raspberrypi:
                 else:
                     continue
         res = raspberrypi_ip
-        return res
-    
+        if res != 0:
+            return res
+        else:
+            quit("password or username are not good or raspberry is on the internet")
+
     def set_raspberry_info(self,user_name,password):
         global raspberrypi_info
         raspberrypi_info = list()
@@ -1455,6 +1458,7 @@ def run_command(command=None,display=False):
                 display=display,
                 capture=True
             )
+            ssh_controller.disconnect()
             return output[-1]
         except:
             import os
