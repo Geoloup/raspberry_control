@@ -1,6 +1,6 @@
 # **Raspberry Pi controller**
 ## help
- [wiki](https://github.com/Geoloup/raspberry_control/wiki/)
+ [Raspberrypi controller Wiki](https://github.com/Geoloup/raspberry_control/wiki/)
 ## Feature
  1. Connect in ssh to the Raspberry Pi
  2.  Module and Global call are supported
