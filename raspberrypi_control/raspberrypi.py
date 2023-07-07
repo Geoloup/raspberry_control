@@ -676,13 +676,13 @@ class sftp:
             size = 0
             while True:
                 data = reader.read()
-                writer.write(data)
+                writer.write(str(data))
                 size += len(data)
                 if len(data) == 0:
                     break
                 if callback is not None:
                     callback(size, file_size)
-            return size
+            return str(size)
 
         def putfo(self, fl, remotepath, file_size=0, callback=None, confirm=True):
             """
@@ -1157,7 +1157,7 @@ raspberrypi_ip = 0
 raspberrypi_info = list()
 
 
-def raspberry_command(add=False):
+def raspberry_command():
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
@@ -1466,3 +1466,36 @@ def run_command(command=None,display=False):
     else:
         quit("You need to have a command... At run_command")
         return None
+
+class file:
+    file_content = None
+    def __init__(self,name):
+        global raspberrypi_prep
+        global raspberrypi_info
+        SSH_PWD = "geoloup"
+        HOST_IP = raspberrypi().local(raspberrypi_prep)
+        ssh_controller = ssh.SSHController(
+            host=HOST_IP,
+            user=raspberrypi_info[0],
+            ssh_password=raspberrypi_info[1]
+        )
+        ssh_controller.connect()
+        buffer = StringIO("")
+        content = ssh_controller.getfo(name,buffer)
+        buffer.seek(0)
+        buffer.write(buffer.read()[2:-2])
+        buffer.seek(0)
+        self.file_content = buffer
+        ssh_controller.disconnect()
+    def get(self):
+        self.file_content.seek(0)
+        return self.file_content
+    def update(self,new_buffer):
+        self.file_content.seek(0)
+        self.file_content = new_buffer
+        file.file_content = self.file_content
+        return new_buffer
+    def download(self,result_file):
+        self.file_content.seek(0)
+        open(result_file,"w").write(self.file_content)
+        return open(result_file,"r").read()
