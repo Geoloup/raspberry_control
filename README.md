@@ -1,6 +1,7 @@
 # **Raspberry Pi controller**
+## help
+ [wiki](https://github.com/Geoloup/raspberry_control/wiki/)
 ## Feature
-
  1. Connect in ssh to the Raspberry Pi
  2.  Module and Global call are supported
  3. The function can be run on the Raspberry Pi  by calling `@raspberry_control.raspberry_command()` and get the result
