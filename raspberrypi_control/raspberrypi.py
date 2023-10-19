@@ -1466,6 +1466,7 @@ class raspberrypi:
             ''')
             r.run()
             r.join()
+            raspberrypi_ip = r.p.stdout.decode("UTF-8")
         res = raspberrypi_ip
         if res != 0:
             return res
@@ -1556,6 +1557,7 @@ class runner(threading.Thread):
     def run(self):
         P = subprocess.Popen(cmd, shell=True)
         self.current = psutil.Process(pid=P.pid)
+        self.P
 
     def pause(self):
         self.current.suspend()
