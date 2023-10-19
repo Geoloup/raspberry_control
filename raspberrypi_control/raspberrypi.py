@@ -1448,6 +1448,7 @@ class raspberrypi:
         global raspberrypi_prep
         start_ip = raspberrypi_prep
         if raspberrypi_ip == 0 and raspberrypi_prep == start_ip:
+            r = runner('''
             gh = 0
             gj = []
             while True:
@@ -1462,6 +1463,9 @@ class raspberrypi:
                     break
                 else:
                     continue
+            ''')
+            r.run()
+            r.join()
         res = raspberrypi_ip
         if res != 0:
             return res
@@ -1541,7 +1545,7 @@ class file:
         return open(result_file, "r").read()
 
 
-class runnerd(threading.Thread):
+class runner(threading.Thread):
     # overriding constructor
     def __init__(self, code):
         # calling parent class constructor
