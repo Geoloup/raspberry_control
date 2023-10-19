@@ -2,13 +2,18 @@ import logging
 import paramiko
 import socket
 from os import path
+import re
 from stat import S_ISDIR, S_ISREG
 import signal
+import psutil
+import time
+import subprocess
 from functools import wraps
 from io import StringIO
 from binascii import hexlify
 import errno
 import os
+import threading
 import stat
 import threading
 import time
@@ -68,6 +73,7 @@ _KEY_TYPES = {
 import_list = list()
 imported = "main"
 function_to_add = list()
+
 
 class sftp:
 
@@ -290,7 +296,8 @@ class sftp:
                     # explains this
                     # http://filezilla-project.org/specs/draft-ietf-secsh-filexfer-02.txt
                     for i in range(read_aheads):
-                        num = self._async_request(type(None), CMD_READDIR, handle)
+                        num = self._async_request(
+                            type(None), CMD_READDIR, handle)
                         nums.append(num)
 
                     # For each of our sent requests
@@ -439,7 +446,8 @@ class sftp:
             """
             oldpath = self._adjust_cwd(oldpath)
             newpath = self._adjust_cwd(newpath)
-            self._log(DEBUG, "posix_rename({!r}, {!r})".format(oldpath, newpath))
+            self._log(DEBUG, "posix_rename({!r}, {!r})".format(
+                oldpath, newpath))
             self._request(
                 CMD_EXTENDED, "posix-rename@openssh.com", oldpath, newpath
             )
@@ -720,7 +728,8 @@ class sftp:
                 s = self.stat(remotepath)
                 if s.st_size != size:
                     raise IOError(
-                        "size mismatch in put!  {} != {}".format(s.st_size, size)
+                        "size mismatch in put!  {} != {}".format(
+                            s.st_size, size)
                     )
             else:
                 s = SFTPAttributes()
@@ -851,7 +860,8 @@ class sftp:
                 try:
                     t, data = self._read_packet()
                 except EOFError as e:
-                    raise SSHException("Server connection dropped: {}".format(e))
+                    raise SSHException(
+                        "Server connection dropped: {}".format(e))
                 msg = Message(data)
                 num = msg.get_int()
                 self._lock.acquire()
@@ -979,12 +989,14 @@ class ssh:
 
             if key_path:
                 key_file = open(path.expanduser(key_path), 'r')
-                key = _KEY_TYPES[key_type].from_private_key(key_file, key_password)
+                key = _KEY_TYPES[key_type].from_private_key(
+                    key_file, key_password)
                 self.keys.append(key)
             elif ssh_password is None:
                 self.keys = paramiko.Agent().get_keys()
                 try:
-                    key_file = open(path.expanduser(f"~/.ssh/id_{key_type}"), 'r')
+                    key_file = open(path.expanduser(
+                        f"~/.ssh/id_{key_type}"), 'r')
                     key = _KEY_TYPES[key_type].from_private_key(
                         key_file, key_password)
                 except Exception:
@@ -992,7 +1004,8 @@ class ssh:
                 else:
                     index = len(self.keys) if key_password is None else 0
                     self.keys.insert(index, key)
-                if not self.keys: logging.error("No valid key found")
+                if not self.keys:
+                    logging.error("No valid key found")
 
         def connect(self):
             try:
@@ -1033,7 +1046,8 @@ class ssh:
             channel = self.transport.open_session()
             channel.settimeout(2)
             channel.set_combine_stderr(combine_stderr)
-            if shell: channel.get_pty()
+            if shell:
+                channel.get_pty()
             channel.exec_command(command)
 
             if not display and not capture:
@@ -1043,14 +1057,18 @@ class ssh:
                     try:
                         raw_data = channel.recv(self.nb_bytes)
                     except socket.timeout:
-                        if stop_event.is_set(): break
+                        if stop_event.is_set():
+                            break
                         continue
-                    if not raw_data: break
+                    if not raw_data:
+                        break
                     data = raw_data.decode("utf-8")
                     if display:
                         print(data, end='')
-                    if capture: output += data
-                    if stop_event.is_set(): break
+                    if capture:
+                        output += data
+                    if stop_event.is_set():
+                        break
 
             channel.close()
 
@@ -1072,7 +1090,8 @@ class ssh:
             channel = self.transport.open_session()
             channel.settimeout(timeout)
             channel.set_combine_stderr(combine_stderr)
-            if shell: channel.get_pty()
+            if shell:
+                channel.get_pty()
             channel.exec_command(command)
 
             try:
@@ -1081,7 +1100,8 @@ class ssh:
                 else:
                     while True:
                         raw_data = channel.recv(self.nb_bytes)
-                        if not raw_data: break
+                        if not raw_data:
+                            break
                         data = raw_data.decode("utf-8")
                         if display:
                             re = "raspberrypi_code.raspberrypi.package.python.glt.org.py return "
@@ -1091,7 +1111,8 @@ class ssh:
                                 if gh.find(re) == -1 and not gh == "":
                                     tj.append(gh + "\n")
                             print("".join(tj), end='')
-                        if capture: output += data
+                        if capture:
+                            output += data
             except socket.timeout:
                 logging.warning(f"Timeout after {timeout}s")
                 exit_code = 1
@@ -1142,7 +1163,8 @@ class ssh:
                 if not self.transport.is_authenticated():
                     logging.error("SSH session is not ready")
                     return
-                sftp_channel = ssh.SFTPController.from_transport(self.transport)
+                sftp_channel = ssh.SFTPController.from_transport(
+                    self.transport)
                 r = getattr(sftp_channel, target)(*args, **kwargs)
                 sftp_channel.close()
                 return r
@@ -1188,11 +1210,14 @@ def raspberry_command():
                             res = {}
                             try:
                                 res = {}
-                                exec("from " + imported + " import " + sv.replace("global ", "").replace(" ", "", sv.replace("global ", "").count(" ")) + "result = " + sv.replace("global ", "").replace(" ", "", sv.replace("global ", "").count(" ")), globals(), res)
-                                func_contentl.append(sv.replace("global ", "").replace("\n", "") + " = " + str(res["result"]) + "\n")
+                                exec("from " + imported + " import " + sv.replace("global ", "").replace(" ", "", sv.replace("global ", "").count(
+                                    " ")) + "result = " + sv.replace("global ", "").replace(" ", "", sv.replace("global ", "").count(" ")), globals(), res)
+                                func_contentl.append(sv.replace("global ", "").replace(
+                                    "\n", "") + " = " + str(res["result"]) + "\n")
                             except Exception as e:
                                 res["result"] = sv
-                                func_contentl.append(sv.replace("\n", "") + " = " + str(res["result"]) + "\n")
+                                func_contentl.append(sv.replace(
+                                    "\n", "") + " = " + str(res["result"]) + "\n")
                         elif sv.find("return") == -1 and ft == 1 and ft != 0 and not sv.find("global") == 4:
                             rep = sv.split()
                             rept = 0
@@ -1202,7 +1227,8 @@ def raspberry_command():
                                 rept = rept + 1
                             func_contentl.append(sv)
                         elif sv.find("return") != -1 and ft != 0 and ft != 1 and not sv.find("global") == 4:
-                            func_contentl.append(sv.replace("\n", "").replace("return ", "end(") + ")")
+                            func_contentl.append(sv.replace(
+                                "\n", "").replace("return ", "end(") + ")")
                         ft = ft + 1
                     else:
                         if sv.find("return") == -1 and ft != 1 and ft != 2 and ft != 0 and not sv.find("global") == 4:
@@ -1217,12 +1243,13 @@ def raspberry_command():
                                                                                                              "").count(
                                                                                                              " ")) + "result = " + sv.replace(
                                     "global ", "").replace(" ", "", sv.replace("global ", "").count(" ")), globals(),
-                                     res)
+                                    res)
                                 func_contentl.append(
                                     sv.replace("global ", "").replace("\n", "") + " = " + str(res["result"]) + "\n")
                             except Exception as e:
                                 res["result"] = sv
-                                func_contentl.append(sv.replace("\n", "") + " = " + str(res["result"]) + "\n")
+                                func_contentl.append(sv.replace(
+                                    "\n", "") + " = " + str(res["result"]) + "\n")
                         elif sv.find("return") == -1 and ft == 2 and ft != 1 and ft != 0 and not sv.find("global") == 4:
                             rep = sv.split()
                             rept = 0
@@ -1232,7 +1259,8 @@ def raspberry_command():
                                 rept = rept + 1
                             func_contentl.append(sv)
                         elif sv.find("return") != -1 and ft != 0 and ft != 1 and ft != 2 and not sv.find("global") == 4:
-                            func_contentl.append(sv.replace("\n", "").replace("return ", "end(") + ")")
+                            func_contentl.append(sv.replace(
+                                "\n", "").replace("return ", "end(") + ")")
                         ft = ft + 1
                 # add runner thing
                 global import_list
@@ -1261,12 +1289,14 @@ def raspberry_command():
                     return None
                 ssh_controller.disconnect()
             except Exception as f:  # if raspberrypi not find it's will be run in local on the computer
-                print("raspberrypi was not find or a error have appened. The error is : " + str(f))
+                print(
+                    "raspberrypi was not find or a error have appened. The error is : " + str(f))
                 return func(*args, **kwargs)
 
         return wrapper
 
     return decorator
+
 
 def raspberry_command_add():
     def decorator(func):
@@ -1302,7 +1332,8 @@ def raspberry_command_add():
                             sv.replace("global ", "").replace("\n", "") + " = " + str(res["result"]) + "\n")
                     except Exception as e:
                         res["result"] = sv
-                        func_datal.append(sv.replace("\n", "") + " = " + str(res["result"]) + "\n")
+                        func_datal.append(sv.replace(
+                            "\n", "") + " = " + str(res["result"]) + "\n")
                 elif sv.find("return") == -1 and ft == 1 and ft != 0 and not sv.find("global") == 4:
                     rep = sv.split()
                     rept = 0
@@ -1312,7 +1343,8 @@ def raspberry_command_add():
                         rept = rept + 1
                     func_datal.append(sv)
                 elif sv.find("return") != -1 and ft != 0 and ft != 1 and not sv.find("global") == 4:
-                    func_datal.append(sv.replace("\n", "").replace("return ", "end(") + ")")
+                    func_datal.append(sv.replace(
+                        "\n", "").replace("return ", "end(") + ")")
                 ft = ft + 1
             function_to_add.append("".join(function_to_add))
             return True
@@ -1320,6 +1352,7 @@ def raspberry_command_add():
         return wrapper
 
     return decorator
+
 
 def timeout(seconds, default=None):
     def decorator(func):
@@ -1401,18 +1434,19 @@ class raspberrypi:
         except:
             return False
 
-    def set_preparation(self, start, max_loop, timeout_time):
+    def set_preparation(self, ip, max_loop, timeout_time):
         global raspberrypi_prep
         global raspberrypi_prep_max
         global raspberrypi_prep_timeout
-        raspberrypi_prep = start
+        raspberrypi_prep = ip
         raspberrypi_prep_max = max_loop
         raspberrypi_prep_timeout = timeout_time
 
-    def local(self, start_ip):
+    def local(self, start_ip=None):
         global raspberrypi_ip
         global raspberrypi_prep_max
         global raspberrypi_prep
+        start_ip = raspberrypi_prep
         if raspberrypi_ip == 0 and raspberrypi_prep == start_ip:
             gh = 0
             gj = []
@@ -1432,15 +1466,16 @@ class raspberrypi:
         if res != 0:
             return res
         else:
-            quit("password or username are not good or raspberry is on the internet")
+            quit("password or username are not good or raspberry is on your local internet")
 
-    def set_raspberry_info(self,user_name,password):
+    def set_raspberry_info(self, user_name, password):
         global raspberrypi_info
         raspberrypi_info = list()
         raspberrypi_info.append(user_name)
         raspberrypi_info.append(password)
 
-def run_command(command=None,display=False):
+
+def run_command(command=None, display=False):
     if not command == None:
         global raspberrypi_prep
         global raspberrypi_info
@@ -1462,14 +1497,16 @@ def run_command(command=None,display=False):
             return output[-1]
         except Exception:
             import os
-            return  os.system(command)
+            return os.system(command)
     else:
         quit("You need to have a command... At run_command")
         return None
 
+
 class file:
     file_content = None
-    def __init__(self,name):
+
+    def __init__(self, name):
         global raspberrypi_prep
         global raspberrypi_info
         SSH_PWD = "geoloup"
@@ -1481,21 +1518,55 @@ class file:
         )
         ssh_controller.connect()
         buffer = StringIO("")
-        content = ssh_controller.getfo(name,buffer)
+        content = ssh_controller.getfo(name, buffer)
         buffer.seek(0)
         buffer.write(buffer.read()[2:-2])
         buffer.seek(0)
         self.file_content = buffer
         ssh_controller.disconnect()
+
     def get(self):
         self.file_content.seek(0)
         return self.file_content
-    def update(self,new_buffer):
+
+    def update(self, new_buffer):
         self.file_content.seek(0)
         self.file_content = new_buffer
         file.file_content = self.file_content
         return new_buffer
-    def download(self,result_file):
+
+    def download(self, result_file):
         self.file_content.seek(0)
-        open(result_file,"w").write(self.file_content)
-        return open(result_file,"r").read()
+        open(result_file, "w").write(self.file_content)
+        return open(result_file, "r").read()
+
+
+class runnerd(threading.Thread):
+    # overriding constructor
+    def __init__(self, code):
+        # calling parent class constructor
+        threading.Thread.__init__(self)
+        self.code = code
+    # define your own run method
+
+    def run(self):
+        P = subprocess.Popen(cmd, shell=True)
+        self.current = psutil.Process(pid=P.pid)
+
+    def pause(self):
+        self.current.suspend()
+
+    def unpause(self):
+        self.current.resume()
+
+    def stop(self):
+        self.current.terminate()
+
+    def restart(self, code=None):
+        if code == None:
+            self.stop()
+            self.run()
+        else:
+            self.stop()
+            self.code = code
+            self.run()

@@ -10,6 +10,7 @@
  6. Run command on the Raspberry Pi with `raspberry_control.run_command("command here")`
  7. You can do `@raspberrypi.timeout(time,default)` that will make the function stop after the time specified and stop if it's not finish
  8. Get file from the server and read it ? / write it localy and update after on the server
+ 9. Support .local adress
 ## Example
 
     import raspberrypi_control # import package for raspberrypi controlling over ssh  
@@ -44,8 +45,8 @@
       
     if __name__ == "__main__": # put all you're code to run at start here. Because if not the code will be run 2 time  
         rp.raspberrypi().set_raspberry_info("username here", "password here") # set login info here
-        rp.raspberrypi().set_preparation("192.168.0.10", 8, 1) # config locator for the raspberrypi  
-        rp.raspberrypi().local("192.168.0.10") # set the start ip set in the line in the top  
+        rp.raspberrypi().set_preparation("raspberrypi.local", 8, 1) # config locator for the raspberrypi  
+        rp.raspberrypi().local() # set the start ip set in the line in the top  
         rp.config("main") # file name if this file (no .py)  
         rp.run_command("Hello World",True) # true is for if console ouput is print or no
         print(test())  

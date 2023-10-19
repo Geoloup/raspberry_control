@@ -30,8 +30,8 @@ def other():
 
 if __name__ == "__main__":  # put all you're code to run at start here. Because if not the code will be run 2 time
     rp.raspberrypi().set_raspberry_info("username here", "password here") # set login info here
-    rp.raspberrypi().set_preparation("192.168.0.10", 8, 1)  # config locator for the raspberrypi
-    rp.raspberrypi().local("192.168.0.10")  # set the start ip set in the line in the top
-    rp.config("main")  # file name if this file (no .py)
+    rp.raspberrypi().set_preparation("adress/ip here", 8, 1)  # config locator for the raspberrypi
+    rp.raspberrypi().local()  # set the start ip set in the line in the top
+    rp.config("main")  # file name (no .py)
     print(test())
     print(other())  # you can get the output after
