@@ -2,7 +2,7 @@ import raspberrypi_control  # import package for raspberrypi controlling over ss
 import os  # Put import here they are take and install to the raspberrypi file.
 import time
 
-rp = raspberrypi  # rp is for RaspBerryPi
+rp = raspberrypi_control  # rp is for RaspBerryPi
 
 i = 1234567890
 
@@ -26,7 +26,6 @@ def other():
             time.sleep(0.1)
             break
     return th
-
 
 if __name__ == "__main__":  # put all you're code to run at start here. Because if not the code will be run 2 time
     rp.raspberrypi().set_raspberry_info("username here", "password here") # set login info here

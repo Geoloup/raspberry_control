@@ -1289,8 +1289,6 @@ def raspberry_command():
                     return None
                 ssh_controller.disconnect()
             except Exception as f:  # if raspberrypi not find it's will be run in local on the computer
-                print(
-                    "raspberrypi was not find or a error have appened. The error is : " + str(f))
                 return func(*args, **kwargs)
 
         return wrapper
@@ -1448,7 +1446,6 @@ class raspberrypi:
         global raspberrypi_prep
         start_ip = raspberrypi_prep
         if raspberrypi_ip == 0 and raspberrypi_prep == start_ip:
-            r = runner('''
             gh = 0
             gj = []
             while True:
@@ -1463,15 +1460,11 @@ class raspberrypi:
                     break
                 else:
                     continue
-            ''')
-            r.run()
-            r.join()
-            raspberrypi_ip = r.p.stdout.decode("UTF-8")
         res = raspberrypi_ip
         if res != 0:
             return res
         else:
-            quit("password or username are not good or raspberry is on your local internet")
+            IOError("password or username are not good or raspberry is on your local internet")
 
     def set_raspberry_info(self, user_name, password):
         global raspberrypi_info
@@ -1546,18 +1539,15 @@ class file:
         return open(result_file, "r").read()
 
 
-class runner(threading.Thread):
-    # overriding constructor
+class runner():
     def __init__(self, code):
-        # calling parent class constructor
-        threading.Thread.__init__(self)
         self.code = code
-    # define your own run method
+        self.P = None
 
     def run(self):
-        P = subprocess.Popen(cmd, shell=True)
+        P = subprocess.Popen(self.code, shell=True)
         self.current = psutil.Process(pid=P.pid)
-        self.P
+        self.P = P
 
     def pause(self):
         self.current.suspend()

@@ -2,7 +2,7 @@ import raspberrypi_control  # import package for raspberrypi controlling over ss
 import os  # Put import here they are take and install to the raspberrypi file.
 import time
 
-rp = raspberrypi  # rp is for RaspBerryPi
+rp = raspberrypi_control  # rp is for RaspBerryPi
 
 i = 1234567890
 
@@ -13,7 +13,6 @@ def get_info():
     import requests
     value = list()
     value.append(socket.gethostname())
-    value.append(socket.AF_BLUETOOTH.value)
     val = requests.get("http://ip-api.com/json/").json()
     latitude = val["lat"]
     longitude = val["lon"]
