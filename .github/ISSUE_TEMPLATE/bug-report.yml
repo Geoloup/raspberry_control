@@ -14,7 +14,6 @@ body:
       label: Bug Description
       description: Tell us more about the bug.
       placeholder: Write a description of the bug
-      value: bug description
     validations:
       required: true
   - type: textarea
@@ -22,14 +21,12 @@ body:
       label: Code to reproduce the Bug
       description: Put you're code with removed password and private.
       placeholder: Code here
-      value: Code to recreate the bug
     validations:
-      required: False
+      required: false
   - type: input
     attributes:
       label: Resource URL
       description: If possible, add a Google Drive (or related service) link to help us reproduce the bug.Please note its need to be public.
-      placeholder: https://drive.google.com/file/d/1BlWEGA_j8XVgRCIB65mcRk4rnYdFyspO/view?usp=sharing
-      value: resource url
+      placeholder: ressource public url
     validations:
       required: false
