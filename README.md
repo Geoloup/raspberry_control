@@ -4,35 +4,35 @@
 ## Feature
  1. Connect in ssh to the Raspberry Pi
  2.  Module and Global call are supported
- 3. The function can be run on the Raspberry Pi  by calling `@raspberry_control.raspberry_command()` and get the result
+ 3. The function can be run on the Raspberry Pi  by adding `@raspberry_control.raspberry_command()` on top of a function and get the result
  4. Get Output of a function that was run on the raspberry
  5. Real-time output
  6. Run command on the Raspberry Pi with `raspberry_control.run_command("command here")`
- 7. You can do `@raspberrypi.timeout(time,default)` that will make the function stop after the time specified and stop if it's not finish
+ 7. You can do `@raspberrypi.timeout(time,default)` will change the timeout for a functions
  8. Get file from the server and read it ? / write it localy and update after on the server
 ## Not supported
  1. .local adress
 ## Example
 
     import raspberrypi_control # import package for raspberrypi controlling over ssh  
-    import os # Put import here they are take and install to the raspberrypi file.  
+    import os # raspberryPi control can automacly install package.
     import time  
       
-    rp = raspberrypi_control # rp is for RaspBerryPi  
+    rp = raspberrypi_control # rp is for RaspberryPi  
       
     i = 1234567890  
       
       
-    @rp.raspberry_command() # run code and you're raspberrypi. If the raspberrypi was not find it's will be run in local.  
+    @rp.raspberry_command() # When function is called its automatcly run on the raspberrypi fallback : local
     def test():  
         print("Hello RaspBerryPi")  
         return "finished"  
       
       
-    @rp.raspberry_command() # run code and you're raspberrypi. If the raspberrypi was not find it's will be run in local  
+    @rp.raspberry_command() # When function is called its automatcly run on the raspberrypi fallback : local
     def other():  
         global i  
-        print("Hello RaspBerryPi h")  
+        print("Hello RaspberryPi h")  
         th = 0  
         print(i)  
         os.system("echo Hello World")  
